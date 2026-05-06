@@ -361,10 +361,10 @@ async function fetchWeather() {
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    const el = data?.records?.Station?.[0]?.WeatherElement;
-    const temp = parseFloat(el?.AirTemperature);
-    const humid = parseFloat(el?.RelativeHumidity);
-    const rain = parseFloat(el?.Now?.Precipitation);
+    const current = data?.current;
+    const temp = parseFloat(current?.temperature_2m);
+    const humid = parseFloat(current?.relative_humidity_2m);
+    const rain = parseFloat(current?.precipitation);
     if (!isNaN(temp)) {
       weatherTemp = temp.toFixed(1);
       weatherHumid = Math.round(humid);
@@ -372,7 +372,7 @@ async function fetchWeather() {
       document.getElementById('w-humid').textContent = weatherHumid;
       document.getElementById('w-rain').textContent = isNaN(rain) ? '0.0' : rain.toFixed(1);
       const now = new Date();
-      status.textContent = '台北（松山測站）· 更新於 ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+      status.textContent = '台北即時氣象 · 更新於 ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
       status.className = 'weather-status ok';
     } else {
       throw new Error('no data');
